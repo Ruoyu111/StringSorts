@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
 public class LSD {
     private static final int BITS_PER_BYTE = 8;
@@ -63,14 +65,38 @@ public class LSD {
             if (d == w - 1) {
                 int shift1 = count[R] - count[R/2];
                 int shift2 = count[R/2];
-                for (int r = 0; r < R/2) {
-                    
-                }
+                for (int r = 0; r < R/2; r++)
+                    count[r] += shift1;
+                for (int r = R/2; r < R; r++)
+                    count[r] -= shift2;
             }
+            
+            // move data
+            for (int i = 0; i < n; i++) {
+                int c = (a[i] >> BITS_PER_BYTE*d) & MASK;
+                aux[count[c]++] = a[i];
+            }
+            
+            // copy back
+            for (int i = 0; i < n; i++)
+                a[i] = aux[i];
         }
     }
     
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        String[] a = StdIn.readAllStrings();
+        int n = a.length;
+        
+        // check that strings have fixed length
+        int w = a[0].length();
+        for (int i = 0; i < n; i++)
+            assert a[i].length() == w : "Strings must have fixed length";
+        
+        // sort the strings
+        sort(a, w);
+        
+        // print results
+        for (int i = 0; i < n; i++)
+            StdOut.println(a[i]);
     }
 }
